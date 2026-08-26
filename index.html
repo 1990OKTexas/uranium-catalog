@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Luminescent Vault • Collector Catalog</title>
+<style>
+/* CSS Variables for theme */
+:root {
+    --bg-main: #0c1117;
+    --bg-card: #131d27;
+    --bg-accent: #0d141d;
+    --border-color: #1e3a47;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-glow: #34d399;
+    --accent-primary: #10b981;
+    --accent-warning: #fbbf24;
+}
+
+/* Basic Reset & Typography */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+}
+
+/* Print-Specific Rules for High-End PDF Generation */
+@page {
+    size: A4;
+    margin: 16mm 12mm;
+    background-color: var(--bg-main);
+    @top-left {
+        content: "THE LUMINESCENT VAULT • COLLECTOR CATALOG";
+        font-size: 7pt;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        color: var(--accent-primary);
+        text-transform: uppercase;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    @top-right {
+        content: "URANIUM GLASS & HOROLOGY";
+        font-size: 7pt;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-size: 7pt;
+        font-weight: bold;
+        color: var(--accent-primary);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+}
+@page:first {
+    margin: 0;
+    @top-left { content: none; }
+    @top-right { content: none; }
+    @bottom-right { content: none; }
+}
+
+/* Cover Page Styles */
+.cover-wrapper {
+    width: 210mm;
+    height: 297mm;
+    padding: 24mm 20mm;
+    background: #080c10;
+    position: relative;
+    border: 1px solid #080c10;
+}
+.cover-border {
+    border: 2px solid var(--accent-primary);
+    height: 100%;
+    padding: 16mm 14mm;
+    position: relative;
+    background: var(--bg-accent);
+}
+.cover-header-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid var(--accent-primary);
+    color: var(--text-glow);
+    font-size: 8.5pt;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    margin-bottom: 18px;
+}
+.cover-title {
+    font-size: 28pt;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: 1px;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
+.cover-title span { color: var(--accent-primary); }
+.cover-subtitle {
+    font-size: 11.5pt;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin: 0 0 22px 0;
+    font-weight: 300;
+}
+.cover-divider {
+    height: 2px;
+    background: var(--accent-primary);
+    margin: 18px 0 24px 0;
+}
+
+/* Stats Grid */
+.stats-table {
+    width: 100%;
+    margin-bottom: 24px;
+    border-collapse: separate;
+    border-spacing: 8px 0;
+}
+.stats-cell {
+    width: 25%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-top: 3px solid var(--accent-primary);
+    padding: 10px 8px;
+    text-align: center;
+    border-radius: 4px;
+}
+.stats-num { font-size: 16pt; font-weight: bold; color: var(--text-glow); margin-bottom: 2px; }
+.stats-label { font-size: 7pt; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.curatorial-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-primary);
+    padding: 14px 16px;
+    border-radius: 4px;
+    margin-bottom: 22px;
+}
+.curatorial-box h3 { margin: 0 0 8px 0; font-size: 10pt; color: var(--text-glow); text-transform: uppercase; letter-spacing: 1px; }
+.curatorial-box p { margin: 0; font-size: 8.5pt; line-height: 1.45; color: #cbd5e1; }
+
+/* Layout Helpers */
+.section-header {
+    border-bottom: 2px solid var(--accent-primary);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    margin-top: 10px;
+}
+.section-header h2 {
+    margin: 0; font-size: 14pt; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px;
+}
+.section-header h2 span { color: var(--accent-primary); }
+
+/* Index Table */
+.index-table {
+    width: 100%; border-collapse: collapse; font-size: 7.2pt; margin-top: 8px;
+}
+.index-table th {
+    background: var(--accent-primary); color: #06241a; font-weight: bold; text-align: left; padding: 5px 6px; text-transform: uppercase; border: 1px solid var(--accent-primary);
+}
+.index-table td { padding: 4px 6px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+.index-table tr:nth-child(even) td { background: #0f172a; }
+.index-table tr:nth-child(odd) td { background: var(--bg-card); }
+
+/* Catalog Item Card */
+.item-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 9px 12px;
+    margin-bottom: 12px;
+    page-break-inside: avoid;
+    display: flex;
+    align-items: stretch;
+}
+.item-photo-col {
+    width: 35%;
+    text-align: center;
+    padding-right: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.photo-frame {
+    background: #070a0e;
+    border: 1px solid var(--accent-primary);
+    border-radius: 4px;
+    padding: 4px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+.photo-frame img {
+    width: 100%;
+    height: auto;
+    max-height: 90mm;
+    object-fit: cover;
+    border-radius: 2px;
+    display: block;
+}
+.item-info-col {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+}
+.lot-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+}
+.lot-tag {
+    display: inline-block;
+    background: var(--accent-primary);
+    color: #06241a;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+.lot-title-text { font-size: 10pt; font-weight: bold; color: #ffffff; vertical-align: middle; line-height: 1.2; }
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: 28% 72%;
+    row-gap: 5px;
+    font-size: 7.6pt;
+    margin-bottom: 8px;
+}
+.spec-label { color: var(--text-muted); font-weight: bold; text-transform: uppercase; font-size: 7pt; letter-spacing: 0.4px; }
+.spec-val { color: #f1f5f9; }
+.spec-val-highlight { color: var(--accent-warning); font-weight: bold; }
+.spec-val-glow { color: var(--text-glow); font-weight: bold; }
+
+.desc-block {
+    background: var(--bg-accent);
+    border-left: 2px solid var(--accent-primary);
+    padding: 6px 10px;
+    border-radius: 0 4px 4px 0;
+    margin-top: auto;
+}
+.desc-heading { font-size: 7pt; font-weight: bold; color: var(--text-glow); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.desc-text { font-size: 7.4pt; line-height: 1.35; color: #cbd5e1; margin: 0; }
+
+/* Browser/Mobile Web Fallback Styling */
+@media screen {
+    body { padding: 20px; }
+    .cover-wrapper { width: 100%; height: auto; max-width: 800px; margin: 0 auto 30px auto; }
+    .item-card { max-width: 800px; margin: 0 auto 20px auto; flex-direction: column; }
+    .item-photo-col, .item-info-col { width: 100%; padding: 0; }
+    .item-photo-col { margin-bottom: 15px; }
+    .photo-frame img { max-height: 400px; }
+    .index-table-container { max-width: 800px; margin: 0 auto; overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover-wrapper">
+    <div class="cover-border">
+        <div class="cover-header-badge">Museum & Collector Identification Series</div>
+        <h1 class="cover-title">THE LUMINESCENT<br><span>VAULT</span></h1>
+        <p class="cover-subtitle">
+            A Curatorial Identification & Valuation Catalog of Vintage Uranium Glass, Depression Tableware, and Radioluminescent Horological Artifacts
+        </p>
+        <div class="cover-divider"></div>
+        <table class="stats-table">
+            <tr>
+                <td class="stats-cell">
+                    <div class="stats-num">26</div>
+                    <div class="stats-label">Cataloged Lots</div>
+                </td>
+                <td class="stats-cell">
+                    <div class="stats-num">395nm</div>
+                    <div class="stats-label">Peak UV Response</div>
+                </td>
+                <td class="stats-cell">
+                    <div class="stats-num">1920–1970s</div>
+                    <div class="stats-label">Era Span</div>
+                </td>
+                <td class="stats-cell">
+                    <div class="stats-num">$1,195+</div>
+                    <div class="stats-label">Collection Est.</div>
+                </td>
+            </tr>
+        </table>
+        <div class="curatorial-box">
+            <h3>Collection Overview & Curatorial Scope</h3>
+            <p>
+                This catalog documents an extraordinary twenty-six piece private assemblage of ultraviolet-reactive glassware and vintage luminous timepieces. Spanning Depression-era masterworks from the Hocking Glass Company, Jeannette Glass, Federal Glass, and Fenton Art Glass to iconic mid-century American horology from Westclox and Equity, each item is cataloged with maker attribution, pattern identification, dimensional specifications, UV spectral characteristics, and collector market valuation.
+            </p>
+        </div>
+        <div style="background: #0f172a; border: 1px solid #1e3a47; padding: 12px 14px; border-radius: 4px; position: absolute; bottom: 16mm; left: 14mm; right: 14mm;">
+            <table style="width: 100%; font-size: 7.5pt; color: #94a3b8;">
+                <tr>
+                    <td style="width: 50%; padding-bottom: 4px;"><strong style="color: #34d399;">CATALOG NUMBER:</strong> LV-2026-CAT-02</td>
+                    <td style="width: 50%; padding-bottom: 4px;"><strong style="color: #34d399;">CLASSIFICATION:</strong> Glassware & Horology</td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;"><strong style="color: #34d399;">SPECTRAL EXCITATION:</strong> 365 nm – 395 nm UVA</td>
+                    <td style="width: 50%;"><strong style="color: #34d399;">EMISSION PEAK:</strong> 525 nm (Uranyl Green)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Master Index Table -->
+<div class="index-table-container">
+    <div class="section-header">
+        <h2>Collection <span>Master Index</span></h2>
+    </div>
+    <table class="index-table">
+        <thead>
+            <tr>
+                <th style="width: 8%;">Lot</th>
+                <th style="width: 32%;">Item Description</th>
+                <th style="width: 25%;">Maker / Line</th>
+                <th style="width: 15%;">Era</th>
+                <th style="width: 20%;">Est. Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 01</td>
+                <td><strong>Uranium Glass Scalloped Open Salt / Toothpick Holder</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008893.png</span></td>
+                <td>Early American / Depression Era</td>
+                <td>c. 1920s – 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$35 – $55</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 02</td>
+                <td><strong>Fenton Green Opalescent Hobnail 3-Footed Ruffled Bowl</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008886.png</span></td>
+                <td>Fenton Art Glass Company</td>
+                <td>c. 1940s – 1950s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$75 – $110</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 03</td>
+                <td><strong>Uranium Depression Glass Footed Sherbet / Coupe Dish</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008887.png</span></td>
+                <td>Hazel-Atlas Glass Co. / Federal Glass Co.</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$20 – $35</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 04</td>
+                <td><strong>Uranium Glass Citrus Juicer / Reamer Insert</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008888.png</span></td>
+                <td>Jeannette Glass Company / McKee Glass Co.</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$40 – $65</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 05</td>
+                <td><strong>Uranium Depression Glass Paneled Water Tumbler</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008889.png</span></td>
+                <td>Federal Glass Co. / Hazel-Atlas</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$18 – $30</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 06</td>
+                <td><strong>Uranium Glass Paneled Syrup Pitcher / Creamer</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008890.png</span></td>
+                <td>Hazel-Atlas Glass Co. / Federal Glass Co.</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$45 – $70</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 07</td>
+                <td><strong>Anchor Hocking "Cameo" (Ballerina) Square Bowl</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008891.png</span></td>
+                <td>Anchor Hocking Glass Corporation</td>
+                <td>1930 – 1934</td>
+                <td style="color: #fbbf24; font-weight: bold;">$65 – $95</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 08</td>
+                <td><strong>Uranium Glass 4-Ring Ribbed Shot Glass / Taster</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008892.png</span></td>
+                <td>Mid-Century American Barware</td>
+                <td>c. 1930s – 1950s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$25 – $40</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 09</td>
+                <td><strong>Uranium Depression Glass Two-Handled Footed Dish</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008894.png</span></td>
+                <td>Anchor Hocking / Imperial Glass Co.</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$30 – $50</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 10</td>
+                <td><strong>Uranium Glass "Hen on Nest" Miniature Covered Dish</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008895.png</span></td>
+                <td>Mosser Glass / Boyd / Westmoreland</td>
+                <td>Mid-to-Late 20th Century</td>
+                <td style="color: #fbbf24; font-weight: bold;">$50 – $80</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 11</td>
+                <td><strong>Uranium Depression Glass Ribbed Iced Tea Tumbler</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008896.png</span></td>
+                <td>Federal Glass Co. / Anchor Hocking</td>
+                <td>c. 1930s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$22 – $38</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 12</td>
+                <td><strong>Hocking "Mayfair" (Open Rose) Covered Candy Dish</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008897.png</span></td>
+                <td>Hocking Glass Company</td>
+                <td>1931 – 1937</td>
+                <td style="color: #fbbf24; font-weight: bold;">$75 – $120</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 13</td>
+                <td><strong>Jeannette "Sunflower" Handled Round Platter</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008898.png</span></td>
+                <td>Jeannette Glass Company</td>
+                <td>1930 – 1935</td>
+                <td style="color: #fbbf24; font-weight: bold;">$45 – $75</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 14</td>
+                <td><strong>Equity "Superbell" Wind-Up Alarm Clock</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008899.png</span></td>
+                <td>Equity Clock Company</td>
+                <td>c. Mid-20th Century</td>
+                <td style="color: #fbbf24; font-weight: bold;">$40 – $70</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 15</td>
+                <td><strong>Westclox "Big Ben" Loud Alarm Clock</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008900.png</span></td>
+                <td>Westclox</td>
+                <td>c. 1950s – 1960s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$60 – $95</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 16</td>
+                <td><strong>Westclox "Baby Ben" Oval/Round Alarm Clock</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008901.png</span></td>
+                <td>Westclox</td>
+                <td>c. 1950s – 1960s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$55 – $90</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 17</td>
+                <td><strong>Westclox Vintage Square Mechanical Alarm Clock</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008902.png</span></td>
+                <td>Westclox</td>
+                <td>c. 1940s – 1950s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$50 – $85</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 18</td>
+                <td><strong>Set of 4 Uranium Glass 6-Sided Gaming Dice</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008903.png</span></td>
+                <td>Artisan Studio Glass</td>
+                <td>Contemporary</td>
+                <td style="color: #fbbf24; font-weight: bold;">$60 – $95</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 19</td>
+                <td><strong>Westclox Round Alarm Clock (White Casing)</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008904.png</span></td>
+                <td>Westclox</td>
+                <td>c. 1950s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$45 – $75</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; font-weight: bold;">Lot 20</td>
+                <td><strong>Uranium Glass Wide-Base Taper Candlestick Holder</strong><br><span style="font-size: 6pt; color: #64748b;">FILE: 1000008905.png</span></td>
+                <td>Tiffin Glass / Cambridge / Fenton</td>
+                <td>c. 1930s – 1940s</td>
+                <td style="color: #fbbf24; font-weight: bold;">$35 – $60</td>
+            </tr>
+    
+            <tr>
+                <td style="color: #34d399; fon
